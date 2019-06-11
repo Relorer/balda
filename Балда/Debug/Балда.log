@@ -1,8 +1,8 @@
 ﻿  Балда.cpp
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(320): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(349): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(376): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(1259): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(1305): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
-C:\Users\Ytm\source\repos\Балда\Балда\Балда.cpp(1311): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
-  Балда.vcxproj -> C:\Users\Ytm\source\repos\Балда\Debug\Балда.exe
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(314): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(343): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(370): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(1245): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(1290): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
+C:\Users\Ytm\Documents\GitHub\balda\Балда\Балда.cpp(1296): warning C4267: =: преобразование из "size_t" в "SHORT"; возможна потеря данных
+  Балда.vcxproj -> C:\Users\Ytm\Documents\GitHub\balda\Debug\Балда.exe

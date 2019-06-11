@@ -6,21 +6,16 @@
 #define MAX 1000
 #define LEN 30
 
-enum state { empty, letter, possible, passed }; //в данном варианте эта штука заменяет числа на понятные слова. После компиляции они превратся обратно в числа, но это нас не волнуюет. 
-//Это так называемый синтаксический сахар
-//empty - пустая клетка
-//letter - клетка с буквой
-//possible - клетка, в которую можно поставить букву
-//passed - клетка, в которой мы уже побывали в данной ветке рекурсии. Необходима, чтобы не считать одни и теже клетки несколько раз.
+enum state { empty, letter, possible, passed };
 
-struct findInfoWord { // сюда будем записывать найденное слово, которое можно добавить на поле
-	char letter;//буква, которую надо поставить
-	int x, y;//координаты этой буквы
-	int length = 0;//длина слова
-	char str[LEN];//само слово
+struct findInfoWord {
+	char letter;
+	int x, y;
+	int length = 0;
+	char str[LEN];
 };
 
-void fillFindInfoWord(findInfoWord& info, const char* str, int x, int y, char letter) {//совоеобразный конструктор в мире структур.
+void fillFindInfoWord(findInfoWord& info, const char* str, int x, int y, char letter) {
 	info.letter = letter;
 	info.x = x;
 	info.y = y;
@@ -28,8 +23,8 @@ void fillFindInfoWord(findInfoWord& info, const char* str, int x, int y, char le
 	strcpy(info.str, str);
 }
 
-char** dictionary; //массив слов словаря
-int sizeDictionary;//количество слов в словаре
+char** dictionary;
+int sizeDictionary;
 int maxLengthWord = 0;
 
 void foundMaxLengthWord() {
@@ -39,21 +34,21 @@ void foundMaxLengthWord() {
 	}
 }
 
-void deleteDictionary() {//освобождает память, выделенную под словарь. Вызываем в конце программы
+void deleteDictionary() {
 	for (int i = 0; i < sizeDictionary; i++) {
 		delete[] dictionary[i];
 	}
 	delete[] dictionary;
 }
 
-bool checkSorting() {//проверка отсортирован ли словарь
+bool checkSorting() {
 	for (int i = 0; i < sizeDictionary - 1; i++) {
 		if (strcmp(dictionary[i], dictionary[i + 1]) > 0) return false;
 	}
 	return true;
 }
 
-void sort() {//сортирует словарь
+void sort() {
 	for (int i = 0; i < sizeDictionary - 1; i++) {
 		for (int j = 0; j < sizeDictionary - i - 1; j++) {
 			if (strcmp(dictionary[j], dictionary[j + 1]) > 0) {
@@ -66,7 +61,7 @@ void sort() {//сортирует словарь
 	}
 }
 
-void rewriteFileDictionary(const char* str) {//переписывает файл словаря, записываю на его место массив словаря (уже отсортированный и с новыми словами)
+void rewriteFileDictionary(const char* str) {
 	FILE* dictionaryFile = fopen(str, "w");
 	for (int i = 0; i < sizeDictionary; i++) {
 		fprintf(dictionaryFile, "%s\n", dictionary[i]);
@@ -74,7 +69,7 @@ void rewriteFileDictionary(const char* str) {//переписывает файл
 	fclose(dictionaryFile);
 }
 
-void addWordToDictionary(const char* str) {//добавляет слово в словарь. Вот тут особое внимание. Попробую вникнуть в работу с памятью в данной функции
+void addWordToDictionary(const char* str) {
 	int len = strlen(str);
 	if (len > 25) false;
 	if (len > maxLengthWord) maxLengthWord = len;
@@ -95,7 +90,7 @@ void addWordToDictionary(const char* str) {//добавляет слово в с
 	temp = nullptr;
 }
 
-int rememberDictionary(const char* str) {//заполняет массив словаря из файла. Вызывается в начале работы программы
+int rememberDictionary(const char* str) {
 	FILE* dictionaryFile = fopen(str, "r");
 	char buff[LEN];
 	sizeDictionary = 0;
@@ -116,7 +111,7 @@ int rememberDictionary(const char* str) {//заполняет массив сл�
 	return sizeDictionary;
 }
 
-bool isWord(const char* str)   //Есть ли такое слово в словаре. Используется бинарный поиск (для этого и нужна была сортировка). Данный способ дает огромный прирост в скорости поиска слова
+bool isWord(const char* str)
 {
 	int begin = 0;
 	int end = sizeDictionary - 1;
@@ -134,8 +129,8 @@ bool isWord(const char* str)   //Есть ли такое слово в слов
 	return false;
 }
 
-char wordsOnTheField[MAX * LEN] = " \0";//строка со словами, которые уже стоят на поле
-bool haveWordUsed(const char* str)    // Есть ли такое слово уже на игровом поле
+char wordsOnTheField[MAX * LEN] = " \0";
+bool haveWordUsed(const char* str) 
 {
 	char interim[LEN];
 	strcpy(interim + sizeof(char), str);
@@ -146,11 +141,11 @@ bool haveWordUsed(const char* str)    // Есть ли такое слово у�
 	return false;
 }
 
-void addWordsInEnteredWords(const char* str) {//добовляет слово в массив wordsOnTheField. Вызывается, если на поле было добавленно слово
+void addWordsInEnteredWords(const char* str) {
 	snprintf(wordsOnTheField + sizeof(char) * strlen(wordsOnTheField), sizeof(wordsOnTheField), "%s ", str);
 }
 
-void generateRandomWord(char** field, state * **stateField, int size) //выберает случайное слово и ставит его на поле
+void generateRandomWord(char** field, state * **stateField, int size)
 {
 	int curlenght = 0;
 	int index = 0;
@@ -176,8 +171,7 @@ int numlen(int num) {
 	return res;
 }
 
-// вывод
-void printStateField(state * **stateField, int size)//выводит два поля, описывающие состояние основного поля
+void printStateField(state * **stateField, int size)
 {
 	printf("\n");
 	for (int i = 0; i < size; i++) {
@@ -381,10 +375,8 @@ void printFoundWordPlayer2(const char* word, int maxX, HANDLE hConsole, bool cle
 }
 
 
-void _foundRightPartWords(char** field, state * **stateField, int size, findInfoWord & word, //рекурсивно строит ветки от клетки с координатами centralx centraly. и полученные буквы записывает в 
-	// правую чать строки. для каждого варианта слова проверяет его на корректность и сравнивает со словом, которое на данный момент является самым длинным. 
-	// в итоге в "findInfoWord& word" останеться самое длинное слово
-	int x, int y, const int centralx, const int centraly, char wordBuff[LEN * 2], int& rightDepth, const int& leftDepth) {
+void _foundRightPartWords(char** field, state * **stateField, int size, findInfoWord & word,
+int x, int y, const int centralx, const int centraly, char wordBuff[LEN * 2], int& rightDepth, const int& leftDepth) {
 	rightDepth++;
 	if (rightDepth > LEN - 2 || leftDepth + rightDepth + 1 > maxLengthWord) {
 		rightDepth--;
@@ -421,7 +413,7 @@ void _foundRightPartWords(char** field, state * **stateField, int size, findInfo
 	rightDepth--;
 }
 
-void _foundLeftPartWords(char** field, state * **stateField, int size, findInfoWord & word, //аналогичная функция для левой части слова
+void _foundLeftPartWords(char** field, state * **stateField, int size, findInfoWord & word,
 	int x, int y, const int centralx, const int centraly, char wordBuff[LEN * 2], int& leftDepth) {
 	leftDepth++;
 	if (leftDepth > maxLengthWord) {
@@ -463,7 +455,7 @@ void _foundLeftPartWords(char** field, state * **stateField, int size, findInfoW
 	leftDepth--;
 }
 
-void foundWords(char** field, state * **stateField, int size, findInfoWord & word, int x, int y) {//вызывает предыдущие функции для всех букв алфавита. "устанавливая" их в клетку, координаты которой были переданы
+void foundWords(char** field, state * **stateField, int size, findInfoWord & word, int x, int y) {
 
 	char wordBuff[LEN * 2];
 
@@ -481,7 +473,7 @@ void foundWords(char** field, state * **stateField, int size, findInfoWord & wor
 
 }
 
-void foundLongestWords(char** field, state * **stateField, int size, findInfoWord & word)//вызывает предыдущую функцию для всех клеток, в которые можно поставить букву
+void foundLongestWords(char** field, state * **stateField, int size, findInfoWord & word)
 {
 	for (int y = 0; y < size; y++) {
 		for (int x = 0; x < size; x++) {
@@ -491,7 +483,7 @@ void foundLongestWords(char** field, state * **stateField, int size, findInfoWor
 	}
 }
 
-void putWord(char** field, state * **stateField, int size, int x, int y, char let) {//устанавливает переданное слово на поле
+void putWord(char** field, state * **stateField, int size, int x, int y, char let) {
 	field[y][x] = let;
 	stateField[0][y][x] = letter;
 	if (y + 1 < size && stateField[0][y + 1][x] == empty) stateField[0][y + 1][x] = possible;
@@ -500,15 +492,15 @@ void putWord(char** field, state * **stateField, int size, int x, int y, char le
 	if (x - 1 >= 0 && stateField[0][y][x - 1] == empty) stateField[0][y][x - 1] = possible;
 }
 
-bool descend(char** field, state * **stateField, int size, int& score, char exword[LEN]) {//совершает ход бота. С помощью предыдущих функций находит слово и ставит его на поле
+bool descend(char** field, state * **stateField, int size, int& score, char exword[LEN]) {
 	findInfoWord word;
 	foundLongestWords(field, stateField, size, word);
-	if (word.length == 0) return false;//на поле больше нельзя добавить слово
+	if (word.length == 0) return false;
 	addWordsInEnteredWords(word.str);
 	putWord(field, stateField, size, word.x, word.y, word.letter);
 	score += word.length;
 	strcpy(exword, word.str);
-	return true; // подтверждаем успешное добавление слова на поле
+	return true;
 }
 
 int turnPlayer(char** field, state * **stateField, COORD * *coordField, int size, int maxX, HANDLE hConsole, int& score, char exword[LEN]) {
@@ -596,7 +588,7 @@ int turnPlayer(char** field, state * **stateField, COORD * *coordField, int size
 		do
 		{
 			ch = _getch();
-			if (ch >= 224 /*a*/ && ch <= 255 /*я*/) ch -= 32; //перевод в верхний регистр
+			if (ch >= 224 /*a*/ && ch <= 255 /*я*/) ch -= 32;
 			if (ch >= 192 /*А*/ && ch <= 223 /*Я*/) {
 				SetConsoleCursorPosition(hConsole, coordField[posСarriage.Y][posСarriage.X]);
 				printf("%c", ch);
@@ -1240,7 +1232,7 @@ void playTwoPlayer(HANDLE hConsole, PCONSOLE_SCREEN_BUFFER_INFO pwi) {
 		ch = _getch();
 	} while (ch != 13);
 
-	for (int i = 0; i < 2; i++) {//ну и очищаем память от масивов
+	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < sizeField; j++) delete[] stateField[i][j];
 		delete[] stateField[i];
 	}
@@ -1249,15 +1241,8 @@ void playTwoPlayer(HANDLE hConsole, PCONSOLE_SCREEN_BUFFER_INFO pwi) {
 	delete[] field;
 }
 
-void displayDictionary(HANDLE hConsole) {
-	system("cls");
-	printf("Тут в теории редактор словаря, но я ничего не придумал(\nТак что можно просто выпилить");
-	_getch();
-}
-
 int main() {
 	srand(time(0));
-	//настройка консоли
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	HWND hcon = GetConsoleWindow();
 
@@ -1286,10 +1271,10 @@ int main() {
 	sizeDictionary = rememberDictionary(whereDictionary); //заполняем массив словаря
 
 
-	const int n = 4;
+	const int n = 3;
 	COORD positionMenuItem[n];
 	int punkt = 0;
-	char names[n][25] = { "Игра: один игрок", "Игра: два игрока", "Словарь", "Выход" };
+	char names[n][25] = { "Игра: один игрок", "Игра: два игрока", "Выход" };
 	do
 	{
 		int xmax, ymax;
@@ -1350,7 +1335,7 @@ int main() {
 					puts(names[punkt]); break;
 				}
 			}
-		} while (ch != 13);	// enter - выбор пункта меню
+		} while (ch != 13);	// enter
 		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
 		switch (punkt)
 		{
@@ -1360,12 +1345,9 @@ int main() {
 		case 1:
 			playTwoPlayer(hConsole, pwi);
 			break;
-		case 2:
-			displayDictionary(hConsole);
-			break;
 		}
 	} while (punkt != n - 1);
 
-	rewriteFileDictionary(whereDictionary);//переписываем файл словаря
-	deleteDictionary();//очищаем память, выделенную под словарь
+	rewriteFileDictionary(whereDictionary);
+	deleteDictionary();
 }
